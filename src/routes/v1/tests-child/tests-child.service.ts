@@ -32,6 +32,7 @@ export class TestsChildService {
     return this.prisma.testChild.create({
       data: {
         testChild: createTestsChildDto.testChild,
+        image: JSON.stringify(createTestsChildDto.image),
         test: {
           connect: { id: createTestsChildDto.testId },
         },
@@ -48,6 +49,7 @@ export class TestsChildService {
       where: { id },
       data: {
         testChild: updateTestsChildDto.testChild,
+        image: JSON.stringify(updateTestsChildDto.image),
         test: {
           connect: { id: updateTestsChildDto.testId },
         },

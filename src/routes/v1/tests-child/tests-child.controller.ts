@@ -6,11 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  UseInterceptors,
+  UploadedFiles,
+  BadRequestException,
 } from "@nestjs/common";
+import { FilesInterceptor } from "@nestjs/platform-express";
 import { TestsChildService } from "./tests-child.service";
 import { CreateTestsChildDto } from "./dto/create-tests-child.dto";
 import { UpdateTestsChildDto } from "./dto/update-tests-child.dto";
-import { responseHandler } from "src/utils";
+import { responseHandler, multipleImages } from "src/utils";
 import { STATUSCODE, PATH, RESOURCE } from "src/constants";
 
 @Controller()
@@ -35,17 +39,47 @@ export class TestsChildController {
   }
 
   @Post()
-  async create(@Body() createTestsChildDto: CreateTestsChildDto) {
-    const data = await this.testsChildService.add(createTestsChildDto);
+  @UseInterceptors(FilesInterceptor("image"))
+  async create(
+    @Body() createTestsChildDto: CreateTestsChildDto,
+    @UploadedFiles() files: Express.Multer.File[],
+  ) {
+    const uploadedImages = await multipleImages(files, []);
+
+    if (uploadedImages.length === STATUSCODE.ZERO)
+      throw new BadRequestException("At least one image is required.");
+
+    const data = await this.testsChildService.add({
+      ...createTestsChildDto,
+      image: uploadedImages,
+    });
+
     return responseHandler(data, "TestChild created successfully");
   }
 
   @Patch(PATH.EDIT)
+  @UseInterceptors(FilesInterceptor("image"))
   async update(
     @Param(RESOURCE.ID) id: number,
     @Body() updateTestsChildDto: UpdateTestsChildDto,
+    @UploadedFiles() files: Express.Multer.File[],
   ) {
-    const data = await this.testsChildService.update(id, updateTestsChildDto);
+    const oldData = await this.testsChildService.getById(id);
+
+    const uploadNewImages = files.length
+      ? await multipleImages(
+          files,
+          (JSON.parse(oldData.image as string) || []).map(
+            (image: any) => image.public_id,
+          ),
+        )
+      : JSON.parse(oldData.image as string);
+
+    const data = await this.testsChildService.update(id, {
+      ...updateTestsChildDto,
+      image: uploadNewImages,
+    });
+
     return responseHandler(data, "TestChild updated successfully");
   }
 

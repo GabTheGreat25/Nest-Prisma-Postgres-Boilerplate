@@ -25,6 +25,7 @@ model Test {
 model TestChild {
   id        Int      @id @default(autoincrement())
   testChild String
+  image     Json     @default("[]")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   testId    Int
