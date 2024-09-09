@@ -23,7 +23,10 @@ export class TestsService {
 
   async add(createTestDto: CreateTestDto) {
     return this.prisma.test.create({
-      data: createTestDto,
+      data: {
+        ...createTestDto,
+        image: JSON.stringify(createTestDto.image),
+      },
     });
   }
 
@@ -34,7 +37,10 @@ export class TestsService {
 
     return this.prisma.test.update({
       where: { id },
-      data: updateTestDto,
+      data: {
+        ...updateTestDto,
+        image: JSON.stringify(updateTestDto.image),
+      },
     });
   }
 

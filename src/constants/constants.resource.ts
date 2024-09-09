@@ -5,6 +5,7 @@ export const RESOURCE = {
   CLOUDINARY_FOLDER: "projectImages",
   API: "api",
   V1: "/v1",
+  ID: "id",
   TESTS: "/tests",
   TESTS_CHILD: "/testsChild",
 };

@@ -6,12 +6,16 @@ import {
   Patch,
   Param,
   Delete,
+  UseInterceptors,
+  UploadedFiles,
+  BadRequestException,
 } from "@nestjs/common";
+import { FilesInterceptor } from "@nestjs/platform-express";
 import { TestsService } from "./tests.service";
 import { CreateTestDto } from "./dto/create-test.dto";
 import { UpdateTestDto } from "./dto/update-test.dto";
-import { responseHandler } from "src/utils";
-import { STATUSCODE } from "src/constants";
+import { responseHandler, multipleImages } from "src/utils";
+import { STATUSCODE, PATH, RESOURCE } from "src/constants";
 
 @Controller()
 export class TestsController {
@@ -28,26 +32,58 @@ export class TestsController {
     );
   }
 
-  @Get(":id")
-  async findOne(@Param("id") id: number) {
+  @Get(PATH.ID)
+  async findOne(@Param(RESOURCE.ID) id: number) {
     const data = await this.testsService.getById(id);
     return responseHandler(data, "Test retrieved successfully");
   }
 
   @Post()
-  async create(@Body() createTestDto: CreateTestDto) {
-    const data = await this.testsService.add(createTestDto);
+  @UseInterceptors(FilesInterceptor("image"))
+  async create(
+    @Body() createTestDto: CreateTestDto,
+    @UploadedFiles() files: Express.Multer.File[],
+  ) {
+    const uploadedImages = await multipleImages(files, []);
+
+    if (uploadedImages.length === STATUSCODE.ZERO)
+      throw new BadRequestException("At least one image is required.");
+
+    const data = await this.testsService.add({
+      ...createTestDto,
+      image: uploadedImages,
+    });
     return responseHandler(data, "Test created successfully");
   }
 
-  @Patch("edit/:id")
-  async update(@Param("id") id: number, @Body() updateTestDto: UpdateTestDto) {
-    const data = await this.testsService.update(id, updateTestDto);
+  @Patch(PATH.EDIT)
+  @UseInterceptors(FilesInterceptor("image"))
+  async update(
+    @Param(RESOURCE.ID) id: number,
+    @Body() updateTestDto: UpdateTestDto,
+    @UploadedFiles() files: Express.Multer.File[],
+  ) {
+    const oldData = await this.testsService.getById(id);
+
+    const uploadNewImages = files.length
+      ? await multipleImages(
+          files,
+          (JSON.parse(oldData.image as string) || []).map(
+            (image: any) => image.public_id,
+          ),
+        )
+      : JSON.parse(oldData.image as string);
+
+    const data = await this.testsService.update(id, {
+      ...updateTestDto,
+      image: uploadNewImages,
+    });
+
     return responseHandler(data, "Test updated successfully");
   }
 
-  @Delete(":id")
-  async remove(@Param("id") id: number) {
+  @Delete(PATH.DELETE)
+  async remove(@Param(RESOURCE.ID) id: number) {
     const data = await this.testsService.deleteById(id);
     return responseHandler(data, "Test deleted successfully");
   }

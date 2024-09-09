@@ -11,7 +11,7 @@ import { TestsChildService } from "./tests-child.service";
 import { CreateTestsChildDto } from "./dto/create-tests-child.dto";
 import { UpdateTestsChildDto } from "./dto/update-tests-child.dto";
 import { responseHandler } from "src/utils";
-import { STATUSCODE } from "src/constants";
+import { STATUSCODE, PATH, RESOURCE } from "src/constants";
 
 @Controller()
 export class TestsChildController {
@@ -28,8 +28,8 @@ export class TestsChildController {
     );
   }
 
-  @Get(":id")
-  async findOne(@Param("id") id: number) {
+  @Get(PATH.ID)
+  async findOne(@Param(RESOURCE.ID) id: number) {
     const data = await this.testsChildService.getById(id);
     return responseHandler(data, "TestChild retrieved successfully");
   }
@@ -40,17 +40,17 @@ export class TestsChildController {
     return responseHandler(data, "TestChild created successfully");
   }
 
-  @Patch("edit/:id")
+  @Patch(PATH.EDIT)
   async update(
-    @Param("id") id: number,
+    @Param(RESOURCE.ID) id: number,
     @Body() updateTestsChildDto: UpdateTestsChildDto,
   ) {
     const data = await this.testsChildService.update(id, updateTestsChildDto);
     return responseHandler(data, "TestChild updated successfully");
   }
 
-  @Delete(":id")
-  async remove(@Param("id") id: number) {
+  @Delete(PATH.DELETE)
+  async remove(@Param(RESOURCE.ID) id: number) {
     const data = await this.testsChildService.deleteById(id);
     return responseHandler(data, "TestChild deleted successfully");
   }

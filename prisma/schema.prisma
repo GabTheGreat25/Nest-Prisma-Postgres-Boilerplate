@@ -16,6 +16,7 @@ datasource db {
 model Test {
   id        Int         @id @default(autoincrement())
   test      String
+  image     Json        @default("[]")
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
   TestChild TestChild[]
