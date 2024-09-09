@@ -8,3 +8,9 @@ export interface ResponsePayload {
   message: string;
   meta: MetaData;
 }
+
+export interface UploadImages {
+  public_id: string;
+  url: string;
+  originalname: string;
+}
