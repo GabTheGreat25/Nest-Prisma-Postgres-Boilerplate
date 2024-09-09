@@ -14,8 +14,18 @@ datasource db {
 }
 
 model Test {
-  id        Int      @id @default(autoincrement())
+  id        Int         @id @default(autoincrement())
   test      String
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  TestChild TestChild[]
+}
+
+model TestChild {
+  id        Int      @id @default(autoincrement())
+  testChild String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  testId    Int
+  test      Test     @relation(fields: [testId], references: [id], onDelete: Cascade)
 }

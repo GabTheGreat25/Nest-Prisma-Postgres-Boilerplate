@@ -11,10 +11,14 @@ export class TestsService {
     return this.prisma.test.findMany();
   }
 
-  getById(id: number) {
-    return this.prisma.test.findUnique({
+  async getById(id: number) {
+    const test = await this.prisma.test.findUnique({
       where: { id },
     });
+
+    if (!test) throw new NotFoundException("Test not found");
+
+    return test;
   }
 
   async add(createTestDto: CreateTestDto) {
@@ -26,7 +30,7 @@ export class TestsService {
   async update(id: number, updateTestDto: UpdateTestDto) {
     const test = await this.prisma.test.findUnique({ where: { id } });
 
-    if (!test) throw new NotFoundException(`Test not found`);
+    if (!test) throw new NotFoundException("Test not found");
 
     return this.prisma.test.update({
       where: { id },
@@ -37,7 +41,7 @@ export class TestsService {
   async deleteById(id: number) {
     const test = await this.prisma.test.findUnique({ where: { id } });
 
-    if (!test) throw new NotFoundException(`Test not found`);
+    if (!test) throw new NotFoundException("Test not found");
 
     return this.prisma.test.delete({
       where: { id },

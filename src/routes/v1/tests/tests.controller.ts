@@ -31,10 +31,7 @@ export class TestsController {
   @Get(":id")
   async findOne(@Param("id") id: number) {
     const data = await this.testsService.getById(id);
-    return responseHandler(
-      data,
-      !data ? "No Test found" : "Test retrieved successfully",
-    );
+    return responseHandler(data, "Test retrieved successfully");
   }
 
   @Post()

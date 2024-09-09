@@ -5,4 +5,5 @@ export const RESOURCE = {
   API: "api",
   V1: "/v1",
   TESTS: "/tests",
+  TESTS_CHILD: "/testsChild",
 };

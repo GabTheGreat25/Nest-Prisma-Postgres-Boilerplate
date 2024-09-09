@@ -31,7 +31,7 @@ Install Prisma
 
 Setup Database
 
-- npx prisma migrate dev --name init
+- npx prisma migrate dev --name your_message
 - npx prisma db seed
 - npx prisma studio
 - npx prisma generate
