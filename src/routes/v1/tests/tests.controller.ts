@@ -85,6 +85,18 @@ export class TestsController {
   @Delete(PATH.DELETE)
   async remove(@Param(RESOURCE.ID) id: number) {
     const data = await this.testsService.deleteById(id);
+
+    const deleteImages = (imageData: any) =>
+      imageData
+        .flatMap((item: any) => (item.image ? JSON.parse(item.image) : []))
+        .map((image: any) => image.public_id);
+
+    const publicIds = deleteImages([data]);
+    const childPublicIds = deleteImages(data.TestChild || []);
+
+    if (publicIds.length > 0 || childPublicIds.length > 0)
+      await multipleImages([], [...publicIds, ...childPublicIds]);
+
     return responseHandler(data, "Test deleted successfully");
   }
 }

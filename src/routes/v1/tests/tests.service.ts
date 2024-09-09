@@ -8,12 +8,19 @@ export class TestsService {
   constructor(private readonly prisma: PrismaConfigService) {}
 
   getAll() {
-    return this.prisma.test.findMany();
+    return this.prisma.test.findMany({
+      include: {
+        TestChild: true,
+      },
+    });
   }
 
   async getById(id: number) {
     const test = await this.prisma.test.findUnique({
       where: { id },
+      include: {
+        TestChild: true,
+      },
     });
 
     if (!test) throw new NotFoundException("Test not found");
@@ -45,12 +52,20 @@ export class TestsService {
   }
 
   async deleteById(id: number) {
-    const test = await this.prisma.test.findUnique({ where: { id } });
+    const test = await this.prisma.test.findUnique({
+      where: { id },
+      include: {
+        TestChild: true,
+      },
+    });
 
     if (!test) throw new NotFoundException("Test not found");
 
     return this.prisma.test.delete({
       where: { id },
+      include: {
+        TestChild: true,
+      },
     });
   }
 }
