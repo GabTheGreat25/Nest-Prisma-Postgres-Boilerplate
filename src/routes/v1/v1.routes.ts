@@ -1,6 +1,11 @@
 import { RouteTree } from "@nestjs/core";
 import { RESOURCE } from "src/constants";
-import { TestsModule, TestsChildModule } from "../v1";
+import {
+  TestsModule,
+  TestsChildModule,
+  RolesModule,
+  MerchantsModule,
+} from "../v1";
 
 export const v1Routes: RouteTree[] = [
   {
@@ -10,5 +15,13 @@ export const v1Routes: RouteTree[] = [
   {
     path: RESOURCE.TESTS_CHILD,
     module: TestsChildModule,
+  },
+  {
+    path: RESOURCE.ROLES,
+    module: RolesModule,
+  },
+  {
+    path: RESOURCE.MERCHANTS,
+    module: MerchantsModule,
   },
 ];

@@ -8,4 +8,7 @@ export const RESOURCE = {
   ID: "id",
   TESTS: "/tests",
   TESTS_CHILD: "/testsChild",
+  ROLES: "/roles",
+  CUSTOMERS: "/customers",
+  MERCHANTS: "/merchants",
 };

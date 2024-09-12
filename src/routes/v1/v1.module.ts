@@ -4,6 +4,9 @@ import { RESOURCE } from "src/constants";
 import { v1Routes } from "./v1.routes";
 import { TestsModule } from "./tests/tests.module";
 import { TestsChildModule } from "./tests-child/tests-child.module";
+import { CustomersModule } from "./customers/customers.module";
+import { MerchantsModule } from "./merchants/merchants.module";
+import { RolesModule } from "./roles/roles.module";
 
 @Module({
   imports: [
@@ -16,6 +19,9 @@ import { TestsChildModule } from "./tests-child/tests-child.module";
     ]),
     TestsModule,
     TestsChildModule,
+    RolesModule,
+    CustomersModule,
+    MerchantsModule,
   ],
 })
 export class V1Module {}
