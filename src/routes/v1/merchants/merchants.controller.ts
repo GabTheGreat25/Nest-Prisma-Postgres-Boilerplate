@@ -18,6 +18,7 @@ import { UpdateMerchantDto } from "./dto/update-merchant.dto";
 import { responseHandler, multipleImages } from "src/utils";
 import { STATUSCODE, PATH, RESOURCE, ROLE } from "src/constants";
 import { JwtAuthGuard, Roles } from "src/middleware";
+import { UploadImages } from "src/types";
 @Controller()
 export class MerchantsController {
   constructor(private readonly merchantsService: MerchantsService) {}
@@ -72,8 +73,8 @@ export class MerchantsController {
     const uploadNewImages = files.length
       ? await multipleImages(
           files,
-          (JSON.parse(oldData.image as string) || []).map(
-            (image: any) => image.public_id,
+          JSON.parse(oldData.image as string).map(
+            (image: UploadImages) => image.public_id,
           ),
         )
       : JSON.parse(oldData.image as string);

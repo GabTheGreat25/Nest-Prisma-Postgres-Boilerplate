@@ -18,6 +18,7 @@ import { UpdateCustomerDto } from "./dto/update-customer.dto";
 import { responseHandler, multipleImages } from "src/utils";
 import { STATUSCODE, PATH, RESOURCE, ROLE } from "src/constants";
 import { JwtAuthGuard, Roles } from "src/middleware";
+import { UploadImages } from "src/types";
 
 @Controller()
 export class CustomersController {
@@ -93,8 +94,8 @@ export class CustomersController {
     const uploadNewImages = files.image?.length
       ? await multipleImages(
           files.image,
-          (JSON.parse(oldData.image as string) || []).map(
-            (image: any) => image.public_id,
+          JSON.parse(oldData.image as string).map(
+            (image: UploadImages) => image.public_id,
           ),
         )
       : JSON.parse(oldData.image as string);
@@ -102,7 +103,7 @@ export class CustomersController {
     const uploadNewGovIds = files.government_id?.length
       ? await multipleImages(
           files.government_id,
-          (JSON.parse(oldData.government_id as string) || []).map(
+          JSON.parse(oldData.government_id as string).map(
             (govId: any) => govId.public_id,
           ),
         )
