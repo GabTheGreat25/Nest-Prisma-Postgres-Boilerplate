@@ -8,6 +8,7 @@ import {
   Delete,
   UseInterceptors,
   UploadedFiles,
+  UseGuards,
   BadRequestException,
 } from "@nestjs/common";
 import { FileFieldsInterceptor } from "@nestjs/platform-express";
@@ -15,7 +16,8 @@ import { CustomersService } from "./customers.service";
 import { CreateCustomerDto } from "./dto/create-customer.dto";
 import { UpdateCustomerDto } from "./dto/update-customer.dto";
 import { responseHandler, multipleImages } from "src/utils";
-import { STATUSCODE, PATH, RESOURCE } from "src/constants";
+import { STATUSCODE, PATH, RESOURCE, ROLE } from "src/constants";
+import { JwtAuthGuard, Roles } from "src/middleware";
 
 @Controller()
 export class CustomersController {
@@ -72,6 +74,8 @@ export class CustomersController {
   }
 
   @Patch(PATH.EDIT)
+  @UseGuards(JwtAuthGuard)
+  @Roles(ROLE.CUSTOMER)
   @UseInterceptors(
     FileFieldsInterceptor([{ name: "image" }, { name: "government_id" }]),
   )

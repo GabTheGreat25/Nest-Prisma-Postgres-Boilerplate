@@ -70,7 +70,6 @@ export class CustomersService {
         ...customerData,
         image: JSON.stringify(image),
         verificationCode: JSON.stringify(verificationCode),
-        government_id: JSON.stringify(government_id),
       },
       include: { role: true },
     });

@@ -6,6 +6,7 @@ import {
   RolesModule,
   MerchantsModule,
   CustomersModule,
+  AuthModule,
 } from "../v1";
 
 export const v1Routes: RouteTree[] = [
@@ -28,5 +29,9 @@ export const v1Routes: RouteTree[] = [
   {
     path: RESOURCE.CUSTOMERS,
     module: CustomersModule,
+  },
+  {
+    path: RESOURCE.AUTH,
+    module: AuthModule,
   },
 ];

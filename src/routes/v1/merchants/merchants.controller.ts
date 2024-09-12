@@ -9,14 +9,15 @@ import {
   UseInterceptors,
   UploadedFiles,
   BadRequestException,
+  UseGuards,
 } from "@nestjs/common";
 import { FilesInterceptor } from "@nestjs/platform-express";
 import { MerchantsService } from "./merchants.service";
 import { CreateMerchantDto } from "./dto/create-merchant.dto";
 import { UpdateMerchantDto } from "./dto/update-merchant.dto";
 import { responseHandler, multipleImages } from "src/utils";
-import { STATUSCODE, PATH, RESOURCE } from "src/constants";
-
+import { STATUSCODE, PATH, RESOURCE, ROLE } from "src/constants";
+import { JwtAuthGuard, Roles } from "src/middleware";
 @Controller()
 export class MerchantsController {
   constructor(private readonly merchantsService: MerchantsService) {}
@@ -58,6 +59,8 @@ export class MerchantsController {
   }
 
   @Patch(PATH.EDIT)
+  @UseGuards(JwtAuthGuard)
+  @Roles(ROLE.MERCHANT)
   @UseInterceptors(FilesInterceptor("image"))
   async update(
     @Param(RESOURCE.ID) id: number,

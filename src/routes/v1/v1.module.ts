@@ -7,6 +7,7 @@ import { TestsChildModule } from "./tests-child/tests-child.module";
 import { CustomersModule } from "./customers/customers.module";
 import { MerchantsModule } from "./merchants/merchants.module";
 import { RolesModule } from "./roles/roles.module";
+import { AuthModule } from "./auth/auth.module";
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { RolesModule } from "./roles/roles.module";
     RolesModule,
     CustomersModule,
     MerchantsModule,
+    AuthModule,
   ],
 })
 export class V1Module {}
